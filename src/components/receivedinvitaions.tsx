@@ -3,20 +3,32 @@ import React, { useEffect } from 'react';
 import { Text, Avatar, Spinner, Button } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
 import { useSentInvitations } from '@/context/Invitations';
-
+import { Router, useRouter } from 'next/router';
+import { useRef } from 'react';
 const ReceivedInvitations = () => {
+  const router = useRouter();
   const {
     loading,
+    loadingR,
+
     receivedInvitations,
     getAllReceivedInvitations,
     deleteInvitation,
     acceptInvitation,
   } = useSentInvitations();
 
+  const fetchedRef = useRef(false);
+
   useEffect(() => {
-    getAllReceivedInvitations();
+    if (!fetchedRef.current) {
+      const fetchInvitations = async () => {
+        await getAllReceivedInvitations();
+        fetchedRef.current = true;
+      };
+      fetchInvitations();
+    }
   }, []);
-  if (loading) {
+  if (loadingR) {
     return <Spinner></Spinner>;
   }
 
@@ -54,14 +66,14 @@ const ReceivedInvitations = () => {
           <Button
             colorScheme="green"
             onClick={() => acceptInvitation(invitation.invitation_id)}
-            isLoading={Boolean(loading)}
+            isLoading={Boolean(loadingR)}
           >
             Accept
           </Button>
           <Button
             m={'4px'}
             colorScheme="red"
-            isLoading={Boolean(loading)}
+            isLoading={Boolean(loadingR)}
             onClick={() => deleteInvitation(invitation.invitation_id)}
           >
             <DeleteIcon></DeleteIcon>

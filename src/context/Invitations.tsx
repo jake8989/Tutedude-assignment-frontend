@@ -26,6 +26,7 @@ interface InvitationsContextType {
   sentInvitations: Invitation[];
   receivedInvitations: ReceivedInvitation[];
   loading: boolean;
+  loadingR: boolean;
   getAllSentInvitations: () => Promise<void>;
   getAllReceivedInvitations: () => Promise<void>;
   deleteInvitation: (invitationId: string) => void;
@@ -37,12 +38,13 @@ const InvitationsContext = createContext<InvitationsContextType | undefined>(
 );
 
 export const InvitationsProvider = ({ children }: { children: ReactNode }) => {
-  const { getFriends } = useGetFriends();
   const [sentInvitations, setSentInvitations] = useState<Invitation[]>([]);
   const [receivedInvitations, setReceivedInvitations] = useState<
     ReceivedInvitation[]
   >([]);
+
   const [loading, setLoading] = useState<boolean>(false);
+  const [loadingR, setLoadingR] = useState<boolean>(false);
   const toast = useToast();
 
   const getAllSentInvitations = async () => {
@@ -66,7 +68,7 @@ export const InvitationsProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const getAllReceivedInvitations = async () => {
-    setLoading(true);
+    setLoadingR(true);
     try {
       const response: AxiosResponse<ReceivedInvitation[]> = await axios.get(
         `${process.env.NEXT_PUBLIC_BACKEND}/auth/v1/invitations/all-received-requests`,
@@ -77,11 +79,13 @@ export const InvitationsProvider = ({ children }: { children: ReactNode }) => {
         },
       );
       setReceivedInvitations(response.data);
+      setLoadingR(false);
       console.log(receivedInvitations);
     } catch (error) {
+      setLoadingR(false);
       console.error('Error fetching invitations:', error);
     } finally {
-      setLoading(false);
+      setLoadingR(false);
     }
   };
   const acceptInvitation = async (invitation_id: string) => {
@@ -105,6 +109,8 @@ export const InvitationsProvider = ({ children }: { children: ReactNode }) => {
 
         setLoading(false);
         // console.log(response.data);
+        // getFriends();
+
         toast({
           title: 'Adding...',
           description: 'You are now friends',
@@ -170,6 +176,7 @@ export const InvitationsProvider = ({ children }: { children: ReactNode }) => {
         sentInvitations,
         receivedInvitations,
         loading,
+        loadingR,
         getAllSentInvitations,
         getAllReceivedInvitations,
         deleteInvitation,
