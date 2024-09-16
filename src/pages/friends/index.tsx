@@ -19,7 +19,7 @@ import { useRouter } from 'next/router';
 import { useToast } from '@chakra-ui/react';
 import useGetUser from '@/hooks/useGetAllUser';
 import { Spinner } from '@chakra-ui/react';
-
+import useGetFriends from '@/hooks/useGetFriends';
 import { useLogout } from '@/hooks/useLogout';
 import ModelG from '@/components/ModelG';
 import cookie from 'js-cookie';
@@ -72,6 +72,8 @@ export default function friends() {
     // setsearchUser('');
     await getUser(serachUser);
   };
+  const { getFriends, setUsersFriends, usersFriends, unfriendUser } =
+    useGetFriends();
   const handleLogout = () => {
     logout();
   };
@@ -91,6 +93,9 @@ export default function friends() {
       });
       router.push('/');
     }
+  }, []);
+  useEffect(() => {
+    getFriends();
   }, []);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { createInvite, loadingI } = useCreateInvite();
@@ -231,36 +236,42 @@ export default function friends() {
             Your Friends
           </Text>
           <Container mt={'20px'}>
-            <Box
-              // height={'50px'}
-              padding={'5px'}
-              display={'flex'}
-              flexDirection={'row'}
-              border={'0.5px solid teal'}
-              borderRadius={'lg'}
-              mt={'10px'}
-            >
-              <Avatar
-                src={`${'/favicon.ico'}`}
-                // boxSize={'0px'}
-                // borderRadius={'full'}
-              ></Avatar>
-              <Heading fontSize={'20px'} padding={'5px'}>
-                {'Admin'}
-                <Text padding={'2px'} fontSize={'9px'}>
-                  Email :{'admin@a.com'}
-                </Text>
-              </Heading>
-              <Box display={'flex'} marginLeft={'auto'}>
-                <Button
-                  colorScheme={'red'}
-                  // onClick={getListAndCreateInvitaion}
-                  // isLoading={Boolean(loadingI)}
+            {usersFriends.length > 0 &&
+              usersFriends[0]._id !== '' &&
+              usersFriends.map((user) => (
+                <Box
+                  // height={'50px'}
+                  padding={'5px'}
+                  display={'flex'}
+                  flexDirection={'row'}
+                  border={'0.5px solid teal'}
+                  borderRadius={'lg'}
+                  mt={'10px'}
+                  key={user.friendUsername}
                 >
-                  <CloseIcon></CloseIcon>
-                </Button>
-              </Box>
-            </Box>
+                  <Avatar
+                    src={user.friendProfile}
+                    // boxSize={'0px'}
+                    // borderRadius={'full'}
+                  ></Avatar>
+                  <Heading fontSize={'20px'} padding={'5px'}>
+                    {user.friendUsername}
+                    <Text padding={'2px'} fontSize={'9px'}>
+                      Email :{user.friendEmail}
+                    </Text>
+                  </Heading>
+                  <Box display={'flex'} marginLeft={'auto'}>
+                    <Button
+                      colorScheme={'red'}
+                      onClick={() => unfriendUser(user._id)}
+                      // onClick={getListAndCreateInvitaion}
+                      // isLoading={Boolean(loadingI)}
+                    >
+                      Unfriend
+                    </Button>
+                  </Box>
+                </Box>
+              ))}
           </Container>
         </Box>
       </Box>

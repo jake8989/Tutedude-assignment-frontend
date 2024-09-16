@@ -1,10 +1,9 @@
-import useGetAllSentInvitations from '@/hooks/useGetAllSentInvitations';
 import useDeleteInvite from '@/hooks/useDeleteInvite';
 import { Box } from '@chakra-ui/react';
 import React, { useEffect } from 'react';
 import { Text, Avatar, Spinner, Button } from '@chakra-ui/react';
 import { DeleteIcon } from '@chakra-ui/icons';
-import { useSentInvitations } from '@/context/SentInvitations';
+import { useSentInvitations } from '@/context/Invitations';
 const getSentInvitations = () => {
   const { sentInvitations, loading, getAllSentInvitations, deleteInvitation } =
     useSentInvitations();

@@ -23,8 +23,6 @@ import { useToast } from '@chakra-ui/react';
 import useGetUser from '@/hooks/useGetAllUser';
 import { Search2Icon } from '@chakra-ui/icons';
 import { Spinner } from '@chakra-ui/react';
-// interface User {}
-import useGetAllSentInvitations from '@/hooks/useGetAllSentInvitations';
 import useGetAllreceivedInvitation from '@/hooks/useGetAllreceivedInvitation';
 import useCreateInvite from '@/hooks/useCreateInvite';
 import SentInvitations from '@/components/sentInvitaions';
