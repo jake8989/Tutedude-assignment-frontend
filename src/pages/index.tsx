@@ -10,7 +10,7 @@ export default function Home() {
       <main>
         <div>
           <Head>
-            <title>PulseChat</title>
+            <title>Dude's</title>
           </Head>
         </div>
         <Container mt={7}>
